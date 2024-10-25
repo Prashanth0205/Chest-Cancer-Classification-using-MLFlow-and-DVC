@@ -1,9 +1,9 @@
 import os 
 
-from src.CNNClassifier.entity.config_entity import DataIngestionConfig, PrepareBaseModelConfig, TrainingConfig
+from src.CNNClassifier.entity.config_entity import DataIngestionConfig, PrepareBaseModelConfig, TrainingConfig, EvaluationConfig
 
 from src.CNNClassifier.constants import *
-from src.CNNClassifier.utils.common import read_yaml, create_directories
+from src.CNNClassifier.utils.common import read_yaml, create_directories, save_json
 
 class ConfigurationManager:
     def __init__(
@@ -64,3 +64,14 @@ class ConfigurationManager:
         )
 
         return training_config
+    
+    def get_evaluation_config(self) -> EvaluationConfig:
+        eval_config = EvaluationConfig(
+            path_of_model=self.config.training.trained_model_path,
+            training_data=Path("artifacts\data_ingestion\CT-Scan"),
+            mlflow_uri="https://dagshub.com/Prashanth0205/Chest-Cancer-Classification-using-MLFlow-and-DVC.mlflow",
+            all_params=self.params,
+            params_device=self.params.DEVICE,
+            params_batch_size=self.params.BATCH_SIZE
+        )
+        return eval_config

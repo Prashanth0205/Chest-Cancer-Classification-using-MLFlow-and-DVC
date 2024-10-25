@@ -16,7 +16,6 @@ class Training:
     def get_base_model(self):
         self.device = self.config.params_device
         self.model = torch.load(self.config.updated_base_model_path)
-        print(self.model)
         self.model = self.model.to(self.device)
 
     def train_valid_genertor(self):
@@ -76,5 +75,5 @@ class Training:
 
                 if phase == 'val' and epoch_acc > best_acc:
                     best_acc = epoch_acc
-                    torch.save(self.model.state_dict(), self.config.trained_model_path)
+                    torch.save(self.model, self.config.trained_model_path)
         

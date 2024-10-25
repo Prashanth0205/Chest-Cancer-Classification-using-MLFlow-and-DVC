@@ -1,0 +1,48 @@
+stages:
+  data_ingestion:
+    cmd: python src/CNNClassifier/pipeline/stage_01_data_ingestion.py
+    deps:
+      - src/CNNClassifier/pipeline/stage_01_data_ingestion.py
+      - config/config.yaml
+    outs:
+      - artifacts/data_ingestion/CT-Scan
+
+  prepare_base_model:
+    cmd: python src/CNNClassifier/pipeline/stage_02_prepare_base_model.py
+    deps:
+      - src/CNNClassifier/pipeline/stage_02_prepare_base_model.py
+      - config/config.yaml
+    params:
+      - CLASSES
+    outs:
+      - artifacts/prepare_base_model
+
+  training:
+    cmd: python src/CNNClassifier/pipeline/stage_03_model_trainer.py
+    deps:
+      - src/CNNClassifier/pipeline/stage_03_model_trainer.py
+      - config/config.yaml
+      - artifacts/data_ingestion/CT-Scan
+      - artifacts/prepare_base_model
+    params:
+      - BATCH_SIZE
+      - EPOCHS
+      - CLASSES
+      - LEARNING_RATE
+      - DEVICE
+    outs:
+      - artifacts/training/trained_vgg16.pth
+
+  evaluation:
+    cmd: python src/CNNClassifier/pipeline/stage_04_evaluation.py
+    deps:
+      - src/CNNClassifier/pipeline/stage_04_evaluation.py
+      - config/config.yaml
+      - artifacts/data_ingestion/CT-Scan
+      - artifacts/training/trained_vgg16.pth
+    params:
+      - BATCH_SIZE
+      - DEVICE
+    metrics:
+      - scores.json:
+          cache: false
