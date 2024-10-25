@@ -11,3 +11,11 @@
 7. Update the pipeline 
 8. Update the main.py
 9. Update the dvc.yaml 
+
+<!-- import dagshub
+dagshub.init(repo_owner='Prashanth0205', repo_name='Chest-Cancer-Classification-using-MLFlow-and-DVC', mlflow=True)
+
+import mlflow
+with mlflow.start_run():
+  mlflow.log_param('parameter name', 'value')
+  mlflow.log_metric('metric name', 1) -->

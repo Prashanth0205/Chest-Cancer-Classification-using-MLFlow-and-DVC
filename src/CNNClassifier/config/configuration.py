@@ -1,4 +1,6 @@
-from src.CNNClassifier.entity.config_entity import DataIngestionConfig, PrepareBaseModelConfig
+import os 
+
+from src.CNNClassifier.entity.config_entity import DataIngestionConfig, PrepareBaseModelConfig, TrainingConfig
 
 from src.CNNClassifier.constants import *
 from src.CNNClassifier.utils.common import read_yaml, create_directories
@@ -41,3 +43,24 @@ class ConfigurationManager:
         )
 
         return prepare_base_model_config
+    
+    def get_training_config(self) -> TrainingConfig:
+        training = self.config.training
+        prepare_base_model =self.config.prepare_base_model
+        params = self.params
+        training_data = os.path.join(self.config.data_ingestion.root_dir, "CT-Scan")
+        create_directories([Path(training.root_dir)])
+
+        training_config = TrainingConfig(
+            root_dir=Path(training.root_dir),
+            trained_model_path = Path(training.trained_model_path),
+            updated_base_model_path = Path(prepare_base_model.updated_base_model_path),
+            training_data = Path(training_data),
+            params_epochs = params.EPOCHS,
+            params_batch_size = params.BATCH_SIZE,
+            params_num_class = params.CLASSES,
+            params_device = params.DEVICE,
+            params_learning_rate = params.LEARNING_RATE
+        )
+
+        return training_config
